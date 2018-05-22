@@ -33,8 +33,8 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-            invoke create_settings --settings-path ./wger/settings.py --database-path ./wger/database.sqlite
-            invoke bootstrap_wger --settings-path ./wger/settings.py --no-start-server
+            invoke create-settings --settings-path ./wger/settings.py --database-path ./wger/database.sqlite
+            invoke bootstrap-wger --settings-path ./wger/settings.py --no-start-server
 
       - save_cache:
           paths:
