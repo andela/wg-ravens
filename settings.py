@@ -13,7 +13,7 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
-if os.getenv('DATABASE_URL'):		
+if 'DATABASE_URL' in os.environ:		
     DATABASES = {'default': dj_database_url.config()}
 
 DATABASES = {

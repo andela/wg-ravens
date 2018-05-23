@@ -25,7 +25,7 @@ DATABASES = {
     }
 }
 
-if os.getenv('DATABASE_URL'):		
+if 'DATABASE_URL' in os.environ:		
     DATABASES = {'default': dj_database_url.config()}	
 	
 SESSION_ENGINE= 'django.contrib.sessions.backends.cached_db'
