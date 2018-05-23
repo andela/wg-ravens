@@ -13,8 +13,18 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
-if 'DATABASE_URL' in os.environ:		
-    DATABASES = {'default': dj_database_url.config()}
+if os.environ.get("TRIGGER") == 'TRUE':
+    DATABASES['default'] = dj_database_url.config()
+
+if os.environ.get("DB") == "postgres":
+    DATABASES = {
+        'default': {
+            'ENGINE':   'django.db.backends.postgresql',
+            'NAME':     'hc',
+            'USER':     'postgres',
+            'TEST': {'CHARSET': 'UTF8'}
+        }
+    }
 
 DATABASES = {
     'default': {
