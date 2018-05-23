@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from wger.settings_global import *
-import dj_database_url
 
 # Use 'DEBUG = True' to get more details for server errors
 DEBUG = True
@@ -16,8 +15,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/Users/.nesh/Nesh/Sims/wger/wg-ravens/database.sqlite',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': './wger/database.postgresql',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -25,13 +24,8 @@ DATABASES = {
     }
 }
 
-if 'DATABASE_URL' in os.environ:		
-    DATABASES = {'default': dj_database_url.config()}	
-	
-SESSION_ENGINE= 'django.contrib.sessions.backends.cached_db'
-
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'abt%-0%sh8o+mz0g568v)#tdwtpt1_goc@-mr1-2ss2$ol*&b&'
+SECRET_KEY = 't&(i+1n21d5_p*69&&#(exjzx%01vbvkj*0wk%+gfbb$so8a-z'
 
 # Your reCaptcha keys
 RECAPTCHA_PUBLIC_KEY = ''
