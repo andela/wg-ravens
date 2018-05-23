@@ -1,2 +1,2 @@
 web: gunicorn wger.wsgi --log-file -
-release: invoke create-settings --settings-path ./wger/settings.py --database-path ./wger/database.sqlite
+release: invoke create-settings --settings-path ./wger/settings.py --database-path ./wger/database.sqlite && python manage.py collectstatic --noinput
