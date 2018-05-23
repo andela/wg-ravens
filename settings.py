@@ -16,20 +16,10 @@ MANAGERS = ADMINS
 if os.environ.get("TRIGGER") == 'TRUE':
     DATABASES['default'] = dj_database_url.config()
 
-if os.environ.get("DB") == "postgres":
-    DATABASES = {
-        'default': {
-            'ENGINE':   'django.db.backends.postgresql',
-            'NAME':     'hc',
-            'USER':     'postgres',
-            'TEST': {'CHARSET': 'UTF8'}
-        }
-    }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/Users/.nesh/Nesh/Sims/wger/wg-ravens/database.sqlite',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': './wger/database.postgresql',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
