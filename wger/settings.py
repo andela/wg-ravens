@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from wger.settings_global import *
+import dj_database_url
 
 # Use 'DEBUG = True' to get more details for server errors
 DEBUG = True
@@ -24,8 +25,7 @@ DATABASES = {
     }
 }
 
-if os.getenv('DATABASE_URL'):	
-    import dj_database_url	
+if os.getenv('DATABASE_URL'):		
     DATABASES = {'default': dj_database_url.config()}	
 	
 SESSION_ENGINE= 'django.contrib.sessions.backends.cached_db'
