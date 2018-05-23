@@ -16,7 +16,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/Users/.nesh/Nesh/Sims/wger/wg-ravens/wger/database.sqlite',
+        'NAME': '/Users/.nesh/Nesh/Sims/wger/wg-ravens/database.sqlite',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
