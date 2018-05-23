@@ -13,6 +13,8 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
+if os.getenv('DATABASE_URL'):		
+    DATABASES = {'default': dj_database_url.config()}
 
 DATABASES = {
     'default': {
@@ -24,9 +26,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
-if os.getenv('DATABASE_URL'):		
-    DATABASES = {'default': dj_database_url.config()}
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'abt%-0%sh8o+mz0g568v)#tdwtpt1_goc@-mr1-2ss2$ol*&b&'
