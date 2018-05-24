@@ -145,7 +145,7 @@ def create_settings(context, settings_path=None, database_path=None, url=None, d
         dbname = "'test_wger'"
         dbuser = 'postgres'
         dbpassword = ''
-        dbhost = '127.0.0.1'
+        dbhost = ''
         dbport = ''
     elif database_type == 'sqlite3':
         dbengine = 'sqlite3'
