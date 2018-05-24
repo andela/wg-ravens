@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from wger.settings_global import *
+import dj_database_url
 
 # Use 'DEBUG = True' to get more details for server errors
 DEBUG = True
@@ -12,6 +13,8 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
+if os.environ.get("TRIGGER") == 'TRUE':
+    DATABASES['default'] = dj_database_url.config()
 
 DATABASES = {
     'default': {
@@ -25,7 +28,7 @@ DATABASES = {
 }
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'dp!#5(_o)c$dor9h%8=hrx-k^snxi-x2ewg+m82pcxfc0=c^ga'
+SECRET_KEY = 'zwc6v6$de27g=wdr=v_tzns5ef$gr-21-&x5cs$*s3u-tc0)g@'
 
 # Your reCaptcha keys
 RECAPTCHA_PUBLIC_KEY = ''
