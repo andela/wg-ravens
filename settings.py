@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from wger.settings_global import *
-import dj_database_url
 
 # Use 'DEBUG = True' to get more details for server errors
 DEBUG = True
@@ -13,14 +12,12 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
-if os.environ.get("TRIGGER") == 'TRUE':
-    DATABASES= {'default': dj_database_url.config()}
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': './wger/database.postgresql',
-        'USER': '',
+        'NAME': 'wger',
+        'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
@@ -28,7 +25,7 @@ DATABASES = {
 }
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'abt%-0%sh8o+mz0g568v)#tdwtpt1_goc@-mr1-2ss2$ol*&b&'
+SECRET_KEY = 'dp!#5(_o)c$dor9h%8=hrx-k^snxi-x2ewg+m82pcxfc0=c^ga'
 
 # Your reCaptcha keys
 RECAPTCHA_PUBLIC_KEY = ''
