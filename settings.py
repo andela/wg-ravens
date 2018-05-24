@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from wger.settings_global import *
+import django_heroku
+import dj_database_url
 
 # Use 'DEBUG = True' to get more details for server errors
 DEBUG = True
@@ -12,17 +14,19 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'test_wger',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'NAME': 'wger',
+        'USER': 'wger',
+        'PASSWORD': 'wger',
+        'HOST': '',
         'PORT': '',
     }
 }
+
+if os.environ.get("TRIGGER") == 'TRUE':
+    DATABASES['default'] = dj_database_url.config()
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'wv^6)z6)5+5=im=c%u13cd100dfm&4+m^^fu_v96yxd-bl--=b'
@@ -57,3 +61,5 @@ WGER_SETTINGS['EMAIL_FROM'] = 'wger Workout Manager <wger@example.com>'
 
 # Your twitter handle, if you have one for this instance.
 #WGER_SETTINGS['TWITTER'] = ''
+
+django_heroku.settings(locals())
