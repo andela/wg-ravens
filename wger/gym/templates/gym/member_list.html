@@ -4,18 +4,14 @@
 {% block title %}
   {{gym}}
 {% if user_status == 'active' %}
-{% trans "Active Members" %}
+{% trans "Active Administrators" %}
 <button type="button" class="btn btn-outline-warning">
-  <!-- {% url 'user-list' pk=gym.id status='deactivated' as a_url %}
-  <a href={{a_url}}>View Deactived</a> -->
-  <a href="/en/gym/{{ gym.id }}/members/deactivated"/>View Inactive</a>
+  <a href="{% url 'gym:gym:user-list' pk=gym.id status='deactivated'  %}"/>View Inactive</a>
 </button>
 {% else %}
 {% trans "Inactive Members" %}
 <button type="button" class="btn btn-outline-success">
-  <!-- {% url 'user-list' gym.id active as a_url %}
-  <a href={{a_url}}>View Deactived</a> -->
-  <a href="/en/gym/{{ gym.id }}/members/"/>View Active</a>
+  <a href="{% url 'gym:gym:user-list' pk=gym.id status='active'  %}"/>View Active</a>
 </button>
 {% endif %}
 {% endblock %}
