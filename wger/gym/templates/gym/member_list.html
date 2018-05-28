@@ -4,7 +4,7 @@
 {% block title %}
   {{gym}}
 {% if user_status == 'active' %}
-{% trans "Active Administrators" %}
+{% trans "Active Members" %}
 <button type="button" class="btn btn-outline-warning">
   <a href="{% url 'gym:gym:user-list' pk=gym.id status='deactivated'  %}"/>View Inactive</a>
 </button>
