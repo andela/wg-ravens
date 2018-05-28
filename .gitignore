@@ -64,8 +64,6 @@ target/
 wger/core/static/bower_components
 node_modules
 
-<<<<<<< HEAD
-=======
+
 package-lock.json
 venv-django/
->>>>>>> [Chore #157589639] Add to external libraries
