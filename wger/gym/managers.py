@@ -34,7 +34,7 @@ class GymManager(models.Manager):
         perm_gyms = Permission.objects.get(codename='manage_gyms')
         perm_trainer = Permission.objects.get(codename='gym_trainer')
 
-        users = self.get_users_by_status(gym_pk, activity_status=None)
+        users = self.get_users_by_status(gym_pk, activity_status)
         return users.exclude(Q(groups__permissions=perm_gym) |
                              Q(groups__permissions=perm_gyms) |
                              Q(groups__permissions=perm_trainer)).distinct()
