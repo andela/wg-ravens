@@ -371,7 +371,3 @@ WGER_SETTINGS = {
     'EMAIL_FROM': 'wger Workout Manager <wger@example.com>',
     'TWITTER': False
 }
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'wger/core/static')
-
