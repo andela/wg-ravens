@@ -314,6 +314,9 @@ THUMBNAIL_ALIASES = {
 STATIC_ROOT = os.path.join(BASE_DIR, '/wger/core/static')
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'wger/core/static')
+
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True
 COMPRESS_CSS_FILTERS = (

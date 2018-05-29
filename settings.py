@@ -65,5 +65,4 @@ WGER_SETTINGS['EMAIL_FROM'] = 'wger Workout Manager <wger@example.com>'
 
 django_heroku.settings(locals())
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'wger/core/static')
+
