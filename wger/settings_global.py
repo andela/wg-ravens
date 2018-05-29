@@ -91,7 +91,7 @@ INSTALLED_APPS = (
 # added list of external libraries to be installed by bower
 BOWER_INSTALLED_APPS = (
     'jquery#2.1.x',
-    'bootstrap',
+    'bootstrap#3.3.5',
     'd3',
     'shariff',
     'tinymce-dist',
@@ -312,7 +312,7 @@ THUMBNAIL_ALIASES = {
 # Django compressor
 #
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/core/static/'
+STATIC_URL = '/static/'
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True
