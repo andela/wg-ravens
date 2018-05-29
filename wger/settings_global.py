@@ -96,7 +96,7 @@ BOWER_INSTALLED_APPS = (
     'shariff',
     'tinymce-dist',
     'DataTables',
-    'components-font-awesome',
+    'components-font-awesome#4.7.0',
     'tinymce',
     'metrics-graphics',
     'devbridge-autocomplete#1.2.x',
@@ -182,7 +182,7 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 #
 # Email
 #
@@ -311,11 +311,12 @@ THUMBNAIL_ALIASES = {
 #
 # Django compressor
 #
-STATIC_ROOT = os.path.join(BASE_DIR, '/wger/core/static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'wger/core/static')
+    os.path.join(BASE_DIR, 'static'),
+)
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True
