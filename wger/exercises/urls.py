@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+22# -*- coding: utf-8 -*-
 
 # This file is part of wger Workout Manager.
 #
