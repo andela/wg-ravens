@@ -99,6 +99,7 @@ class PlanDeleteView(WgerDeleteMixin, DeleteView):
         '''
         Send some additional data to the template
         '''
+       
         context = super(PlanDeleteView, self).get_context_data(**kwargs)
         context['title'] = _(u'Delete {0}?').format(self.object)
         return context
@@ -117,6 +118,7 @@ class PlanEditView(WgerFormMixin, UpdateView):
         '''
         Send some additional data to the template
         '''
+
         context = super(PlanEditView, self).get_context_data(**kwargs)
         context['title'] = _(u'Edit {0}').format(self.object)
         return context
@@ -126,6 +128,7 @@ def view(request, id):
     '''
     Show the nutrition plan with the given ID
     '''
+
     template_data = {}
 
     plan = get_object_or_404(NutritionPlan, pk=id)
