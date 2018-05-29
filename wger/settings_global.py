@@ -311,8 +311,8 @@ THUMBNAIL_ALIASES = {
 #
 # Django compressor
 #
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/wger/core/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '/wger/core/static')
+STATIC_URL = '/static/'
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True
