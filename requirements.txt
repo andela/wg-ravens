@@ -9,7 +9,7 @@ django_mobile
 django-formtools>=1.0,<1.1
 bleach
 python-mimeparse
-pillow
+pillow  
 easy-thumbnails
 django_compressor
 icalendar
