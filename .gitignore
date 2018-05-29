@@ -60,6 +60,5 @@ target/
 .idea/
 
 # External Libraries 
-wger/core/static/bower_components
+
 node_modules
-bootstrap
