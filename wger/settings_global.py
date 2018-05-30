@@ -91,7 +91,7 @@ INSTALLED_APPS = (
 # added list of external libraries to be installed by bower
 BOWER_INSTALLED_APPS = (
     'jquery#2.1.x',
-    'bootstrap',
+    'bootstrap#3',
     'd3',
     'shariff',
     'tinymce-dist',
@@ -109,6 +109,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     # Javascript Header. Sends helper headers for AJAX
     'wger.utils.middleware.JavascriptAJAXRedirectionMiddleware',
@@ -310,7 +311,7 @@ THUMBNAIL_ALIASES = {
 #
 # Django compressor
 #
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 # The default is not DEBUG, override if needed
