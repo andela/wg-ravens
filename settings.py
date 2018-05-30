@@ -29,7 +29,8 @@ if os.environ.get("TRIGGER") == 'TRUE':
     DATABASES['default'] = dj_database_url.config()
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'wv^6)z6)5+5=im=c%u13cd100dfm&4+m^^fu_v96yxd-bl--=b'
+if os.environ.get("SECRET"):
+    SECRET_KEY = os.environ.get("SECRET")
 
 # Your reCaptcha keys
 RECAPTCHA_PUBLIC_KEY = ''
