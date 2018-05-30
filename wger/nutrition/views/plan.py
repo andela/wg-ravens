@@ -118,14 +118,13 @@ class PlanEditView(WgerFormMixin, UpdateView):
         '''
         Send some additional data to the template
         '''
-        import timeit
+
 
         start = timeit.default_timer()
         context = super(PlanEditView, self).get_context_data(**kwargs)
         context['title'] = _(u'Edit {0}').format(self.object)
 
-        end = timeit.default_timer()
-        print(end-start,' eeeeeeeeeeedddddddddit')
+
         return context
     
 
