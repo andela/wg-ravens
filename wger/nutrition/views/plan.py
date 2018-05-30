@@ -120,7 +120,6 @@ class PlanEditView(WgerFormMixin, UpdateView):
         '''
 
 
-        start = timeit.default_timer()
         context = super(PlanEditView, self).get_context_data(**kwargs)
         context['title'] = _(u'Edit {0}').format(self.object)
 
