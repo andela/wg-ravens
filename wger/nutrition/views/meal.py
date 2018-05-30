@@ -50,18 +50,6 @@ class MealCreateView(WgerFormMixin, CreateView):
         return super(MealCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        data = self.request.POST
-        ingredient = Ingredient.objects.get(id=data.get('ingredient'))
-        meal_item = MealItem.objects.create(
-            meal=self.object,
-            amount=data.get('amount'),
-            ingredient=ingredient,
-            order=1,
-        )
-        if 'weight_unit' in data:
-            if data.get('weight_unit'):
-                meal_item.weight_unit = data.get('weight_unit')
-                meal_item.save()
         return self.object.plan.get_absolute_url()
 
     # Send some additional data to the template
