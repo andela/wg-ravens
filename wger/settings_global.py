@@ -91,12 +91,12 @@ INSTALLED_APPS = (
 # added list of external libraries to be installed by bower
 BOWER_INSTALLED_APPS = (
     'jquery#2.1.x',
-    'bootstrap#3.3.5',
+    'bootstrap#3',
     'd3',
     'shariff',
     'tinymce-dist',
     'DataTables',
-    'components-font-awesome#4.7.0',
+    'components-font-awesome',
     'tinymce',
     'metrics-graphics',
     'devbridge-autocomplete#1.2.x',
@@ -182,7 +182,7 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 #
 # Email
 #
@@ -313,10 +313,6 @@ THUMBNAIL_ALIASES = {
 #
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True
