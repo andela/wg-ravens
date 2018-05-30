@@ -64,7 +64,7 @@ def overview(request):
     template_data = {}
     template_data.update(csrf(request))
 
-    plans = NutritionPlan.objects.filter(user=request.user)
+    plans = NutritionPlan.get_nutritional_plans(user=request.user)
     template_data['plans'] = plans
 
     return render(request, 'plan/overview.html', template_data)
@@ -118,11 +118,16 @@ class PlanEditView(WgerFormMixin, UpdateView):
         '''
         Send some additional data to the template
         '''
+        import timeit
 
+        start = timeit.default_timer()
         context = super(PlanEditView, self).get_context_data(**kwargs)
         context['title'] = _(u'Edit {0}').format(self.object)
-        return context
 
+        end = timeit.default_timer()
+        print(end-start,' eeeeeeeeeeedddddddddit')
+        return context
+    
 
 def view(request, id):
     '''
