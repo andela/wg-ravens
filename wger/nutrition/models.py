@@ -163,6 +163,18 @@ class NutritionPlan(models.Model):
             
         return result
 
+    @staticmethod
+    def get_nutritional_plans(user):
+
+        plans_dict = cache.get('nutritional_plans')
+        if not plans_dict:
+            plans_dict = {}
+            plans = NutritionPlan.objects.filter(user=user)[:150]
+            for plan in plans:
+                plans_dict["plan-{}".format(plan.id)] = plan
+                cache.set('nutritional_plans', plans_dict)
+        return plans_dict.values()
+
     def get_closest_weight_entry(self):
         '''
         Returns the closest weight entry for the nutrition plan.
@@ -696,9 +708,11 @@ def handle_cache(sender, **kwargs):
     '''
     deletes the cached data nutrition database is changed
     '''
-
+    
     model = kwargs.get('instance')
     if isinstance(model, (Meal, MealItem)):
         cache.delete(cache_mapper.get_nutrition_item(model.get_owner_object().id))
     else:
+        
         cache.delete(cache_mapper.get_nutrition_item(model.id))
+    
