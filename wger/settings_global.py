@@ -86,6 +86,8 @@ INSTALLED_APPS = (
 
     # django-bower for installing bower packages
     'djangobower',
+
+    'social_django',
 )
 
 # added list of external libraries to be installed by bower
@@ -127,9 +129,17 @@ MIDDLEWARE_CLASSES = (
     # Django mobile
     'django_mobile.middleware.MobileDetectionMiddleware',
     'django_mobile.middleware.SetFlavourMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
+    'social_core.backends.open_id.OpenIdAuth',
+    'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+    
     'django.contrib.auth.backends.ModelBackend',
     'wger.utils.helpers.EmailAuthBackend'
 )
@@ -150,6 +160,9 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
 
                 # Django mobile
                 'django_mobile.context_processors.flavour',
@@ -313,6 +326,14 @@ THUMBNAIL_ALIASES = {
 #
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+
+SOCIAL_AUTH_FACEBOOK_KEY = '1968842486521056'
+SOCIAL_AUTH_FACEBOOK_SECRET = '38e8d9527428e4468ef31f8345f1196a'
+SOCIAL_AUTH_TWITTER_KEY = 'K7Uzr1JbqIMrbFLfMSmFb8W25'
+SOCIAL_AUTH_TWITTER_SECRET = 'U2MtZe5VX4bdFJroZXXwyfh3H9FPPayULnIq5Rxr14tcBIYZKI'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "757034824227-6o19729m7hcfar"\
+                                "420qra1p0g074l5qho.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "ZovH6v_2GMwb4FwyNn9hpq0X"
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True
