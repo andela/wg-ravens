@@ -9,7 +9,7 @@ django_mobile
 django-formtools>=1.0,<1.1
 bleach
 python-mimeparse
-pillow
+pillow  
 easy-thumbnails
 django_compressor
 icalendar
@@ -35,3 +35,6 @@ django-heroku==0.3.1
 gunicorn==19.8.1
 dj-database-url==0.5.0
 whitenoise==3.3.1
+
+#social-logins
+social-auth-app-django

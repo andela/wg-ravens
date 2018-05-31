@@ -154,6 +154,7 @@ sitemaps = {'exercises': ExercisesSitemap, 'nutrition': NutritionSitemap}
 #
 urlpatterns = i18n_patterns(url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('wger.core.urls', namespace='core', app_name='core')),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'workout/', include('wger.manager.urls', namespace='manager')),
     url(r'exercise/', include('wger.exercises.urls', namespace='exercise')),
     url(r'weight/', include('wger.weight.urls', namespace='weight')),
