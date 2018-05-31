@@ -5,14 +5,18 @@
   {{gym}}
 {% if user_status == 'active' %}
 {% trans "Active Members" %}
-<button type="button" class="btn btn-outline-warning">
-  <a href="{% url 'gym:gym:user-list' pk=gym.id status='deactivated'  %}"/>View Inactive</a>
-</button>
+<div class="btn-group">
+  <a href="{% url 'gym:gym:user-list' pk=gym.id status='deactivated'  %}" class="btn btn-warning btn-sm">
+    View Inactive
+  </a>
+</div>
 {% else %}
 {% trans "Inactive Members" %}
-<button type="button" class="btn btn-outline-success">
-  <a href="{% url 'gym:gym:user-list' pk=gym.id status='active'  %}"/>View Active</a>
-</button>
+<div class="btn-group">
+  <a href="{% url 'gym:gym:user-list' pk=gym.id status='active'  %}" class="btn btn-success btn-sm">
+    View Active
+  </a>
+</div>
 {% endif %}
 {% endblock %}
 
