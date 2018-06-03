@@ -59,8 +59,7 @@ function wgerCustomModalInit()
     </thead>
     <tbody>
     <tr>
-        <td colspan="2"></td>
-        <td class="align-right">    </td>
+        <td colspan="3"></td>
         <td class="align-right">{% trans 'kcal' %}</td>
         <td class="align-right">{% trans_weight_unit 'g' owner_user %}</td>
         <td class="align-right">{% trans_weight_unit 'g' owner_user %}</td>
@@ -139,7 +138,7 @@ function wgerCustomModalInit()
 {% endfor %}
         {% if is_owner %}
         <tr>
-            <td colspan="6">
+            <td colspan="7">
             <a href="{% url 'nutrition:meal_item:add-new' plan.id %}"
                class="wger-modal-dialog">
                 <span class="{% fa_class 'plus' %}"></span>
