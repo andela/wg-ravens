@@ -33,6 +33,7 @@ $(document).ready(function() {
     {% render_form_errors form %}
     {{form.ingredient}}
     {% if plan_pk %}
+        {% render_form_field form.meal_choice %}
         {% render_form_field form.time %}
     {% endif %}
 
