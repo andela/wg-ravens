@@ -40,6 +40,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
+            export SECRET='gdvdsvfhdsfhsdfsdhfd'
             ./manage.py makemigrations
             ./manage.py migrate
             ./manage.py test --settings wger.settings
