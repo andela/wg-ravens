@@ -65,5 +65,3 @@ WGER_SETTINGS['EMAIL_FROM'] = 'wger Workout Manager <wger@example.com>'
 
 
 django_heroku.settings(locals())
-
-
