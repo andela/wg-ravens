@@ -7597,7 +7597,7 @@
             "category": 8,
             "uuid": "76964898-192c-4e93-b24c-914ea542002b",
             "muscles": [
-                20
+                13
             ],
             "license": 2,
             "name": "Wrist Curl"
@@ -7620,7 +7620,7 @@
             "category": 8,
             "uuid": "76964898-192c-4e93-b24c-914ea542002b",
             "muscles": [
-                20
+                13
             ],
             "license": 2,
             "name": "Deadlift"
@@ -7642,7 +7642,7 @@
             "category": 8,
             "uuid": "76964898-192c-4e93-b24c-914ea542002b",
             "muscles": [
-                20
+                4
             ],
             "license": 2,
             "name": "Wrist Roller"
