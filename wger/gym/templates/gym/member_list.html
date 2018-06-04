@@ -1,7 +1,24 @@
 {% extends "base.html" %}
 {% load i18n staticfiles wger_extras django_bootstrap_breadcrumbs %}
 
-{% block title %}{{gym}}{% endblock %}
+{% block title %}
+  {{gym}}
+{% if user_status == 'active' %}
+{% trans "Active Members" %}
+<div class="btn-group">
+  <a href="{% url 'gym:gym:user-list' pk=gym.id status='deactivated'  %}" class="btn btn-warning btn-sm">
+    View Inactive
+  </a>
+</div>
+{% else %}
+{% trans "Inactive Members" %}
+<div class="btn-group">
+  <a href="{% url 'gym:gym:user-list' pk=gym.id status='active'  %}" class="btn btn-success btn-sm">
+    View Active
+  </a>
+</div>
+{% endif %}
+{% endblock %}
 
 {% block breadcrumbs %}
     {{ block.super }}
@@ -66,7 +83,8 @@
 </tr>
 {% empty %}
 <tr>
-    <td colspan="4">{% trans "This gym has no administrators or trainers" %}</td>
+    <td colspan="4">{% blocktrans %} This gym has no {{ user_status }} administrators or trainers
+                    {% endblocktrans%}</td>
 </tr>
 {% endfor %}
 </tbody>
