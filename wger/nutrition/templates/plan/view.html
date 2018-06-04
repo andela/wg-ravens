@@ -46,9 +46,11 @@ function wgerCustomModalInit()
 
 <table class="table table-bordered">
     <thead>
+
         <tr style="background: #E0E0E0;">
             <th>{% trans "Meal" %}</th>
             <th>{% trans "Contents" %}</th>
+            <th>{% trans " Status" %}</th>
             <th class="align-right">{% trans "Energy" %}</th>
             <th class="align-right">{% trans "Protein" %}</th>
             <th class="align-right">{% trans "Carbohydrates" %}</th>
@@ -57,7 +59,7 @@ function wgerCustomModalInit()
     </thead>
     <tbody>
     <tr>
-        <td colspan="2"></td>
+        <td colspan="3"></td>
         <td class="align-right">{% trans 'kcal' %}</td>
         <td class="align-right">{% trans_weight_unit 'g' owner_user %}</td>
         <td class="align-right">{% trans_weight_unit 'g' owner_user %}</td>
@@ -110,30 +112,23 @@ function wgerCustomModalInit()
             </span>
             {% endif %}
             </td>
+            {% if item.meal_choice == "Planned" %}
+            <td class="align-right">{% trans "Planned" %}</td>
+           
+            {% elif item.meal_choice == "Consumed" %}
+            <td class="align-right">{% trans "Consumed" %}</td>
+            {% endif %}
             <td class="align-right">{{item.get_nutritional_values.energy|floatformat}}</td>
             <td class="align-right">{{item.get_nutritional_values.protein|floatformat}}</td>
             <td class="align-right">{{item.get_nutritional_values.carbohydrates|floatformat}}</td>
             <td class="align-right">{{item.get_nutritional_values.fat|floatformat}}</td>
-</tr>
-    {% empty %}
-    {% if is_owner %}
-    <tr>
-        <td colspan="7">
-           <a href="{% url 'nutrition:meal_item:add' meal.id %}"
-              title="{% trans 'Add one now.' %}"
-              class="wger-modal-dialog edit-meal btn btn-default btn-block">
-                {% trans "No items for this meal." %}
-                {% trans "Add one now."%}
-            </a>
-        </td>
     </tr>
-    {% endif %}
-    {% endfor %}
+{% endfor %}
 
 {% empty %}
 {% if is_owner %}
 <p>
-     <a href="{% url 'nutrition:meal:add' plan.id %}"
+     <a href="{% url 'nutrition:meal_item:add-new' plan.id %}"
         class="wger-modal-dialog btn btn-default btn-block">
             {% trans "No meals for this plan." %}
             {% trans "Add one now." %}
@@ -143,8 +138,8 @@ function wgerCustomModalInit()
 {% endfor %}
         {% if is_owner %}
         <tr>
-            <td colspan="6">
-            <a href="{% url 'nutrition:meal:add' plan.id %}"
+            <td colspan="7">
+            <a href="{% url 'nutrition:meal_item:add-new' plan.id %}"
                class="wger-modal-dialog">
                 <span class="{% fa_class 'plus' %}"></span>
                 {% trans "Add a new meal" %}

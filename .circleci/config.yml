@@ -40,9 +40,10 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
+            ./manage.py makemigrations --settings wger.settings
+            ./manage.py migrate --settings wger.settings
             ./manage.py test --settings wger.settings
 
       - store_artifacts:
           path: test-reports
           destination: test-reports
-          

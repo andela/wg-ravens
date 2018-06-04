@@ -44,13 +44,20 @@ patterns_meal = [url(r'^(?P<plan_pk>\d+)/meal/add/$',
                      name='delete'), ]
 
 # sub patterns for meal items
-patterns_meal_item = [url(r'^(?P<meal_id>\d+)/item/add/$', login_required(
-    meal_item.MealItemCreateView.as_view()), name='add'),
-                      url(r'^(?P<pk>\d+)/edit/$',
-                          login_required(meal_item.MealItemEditView.as_view()),
-                          name='edit'), url(r'^(?P<item_id>\d+)/delete/$',
-                                            meal_item.delete_meal_item,
-                                            name='delete'), ]
+patterns_meal_item = [
+    url(r'^(?P<meal_id>\d+)/item/add/$',
+        login_required(meal_item.MealItemCreateView.as_view()),
+        name='add'),
+    url(r'^(?P<pk>\d+)/edit/$',
+        login_required(meal_item.MealItemEditView.as_view()),
+        name='edit'),
+    url(r'^(?P<plan_pk>\d+)/new-meal/add/$',
+        login_required(meal_item.MealItemCreateView.as_view()),
+        name='add-new'),
+    url(r'^(?P<item_id>\d+)/delete/$',
+        meal_item.delete_meal_item,
+        name='delete'),
+]
 
 # sub patterns for ingredient
 patterns_ingredient = [
@@ -84,6 +91,7 @@ patterns_unit_ingredient = [url(r'^add/(?P<ingredient_pk>\d+)/$',
                                 name='add'), url(r'^(?P<pk>\d+)/edit/$',
                                                  unit_ingredient.WeightUnitIngredientUpdateView.as_view(),
                                                  name='edit'),
+                            
                             url(r'^(?P<pk>\d+)/delete/$',
                                 unit_ingredient.WeightUnitIngredientDeleteView.as_view(),
                                 name='delete'), ]
