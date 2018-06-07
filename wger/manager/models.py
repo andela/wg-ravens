@@ -47,7 +47,8 @@ logger = logging.getLogger(__name__)
 CYCLE_CHOICES = [
         ('Microcycle', 'Microcycle - Up to one week'),
         ('Mesocycle', 'Mesocycle - Two to six weeks'),
-        ('Macrocycle', 'Macrocycle - Up to one year')
+        ('Macrocycle', 'Macrocycle - Up to one year'),
+        ('None','None Selected')
     ]
 
 
@@ -74,7 +75,7 @@ class Workout(models.Model):
                                            "example 'Focus on back' or 'Week 1 of program xy'."))
     user = models.ForeignKey(User, verbose_name=_('User'))
 
-    cycle = models.CharField(max_length=10, choices=CYCLE_CHOICES)
+    cycle = models.CharField(max_length=10, choices=CYCLE_CHOICES, default='None')
 
     def get_absolute_url(self):
         '''
