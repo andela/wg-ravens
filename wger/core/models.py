@@ -509,6 +509,8 @@ class DaysOfWeek(models.Model):
 
     day_of_week = models.CharField(max_length=9,
                                    verbose_name=_('Day of the week'))
+    
+    plan_type = models.CharField(max_length=9, null=True, blank=True)
 
     class Meta:
         '''
