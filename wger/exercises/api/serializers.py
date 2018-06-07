@@ -29,6 +29,8 @@ class ExerciseSerializer(serializers.ModelSerializer):
     '''
     Exercise serializer
     '''
+    image = serializers.Field(source='main_image')
+    description = serializers.ReadOnlyField(source='description_clean')
     class Meta:
         model = Exercise
         fields = ('category',
@@ -41,7 +43,8 @@ class ExerciseSerializer(serializers.ModelSerializer):
                  'name',
                  'equipment',
                  'license',
-                 'license_author')
+                 'license_author',
+                 'image')
 
 
 class EquipmentSerializer(serializers.ModelSerializer):
