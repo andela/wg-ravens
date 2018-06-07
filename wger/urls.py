@@ -168,7 +168,6 @@ urlpatterns = i18n_patterns(url(r'^admin/', include(admin.site.urls)),
 
 #
 # URLs without language prefix
-print(router.urls)
 #
 urlpatterns += [
     url(r'^robots\.txt$', TextTemplateView.as_view(template_name="robots.txt"),
