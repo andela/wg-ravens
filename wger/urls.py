@@ -168,6 +168,7 @@ urlpatterns = i18n_patterns(url(r'^admin/', include(admin.site.urls)),
 
 #
 # URLs without language prefix
+print(router.urls)
 #
 urlpatterns += [
     url(r'^robots\.txt$', TextTemplateView.as_view(template_name="robots.txt"),
@@ -181,7 +182,8 @@ urlpatterns += [
     url(r'^api/v2/exercise/search/$', exercises_api_views.search,
         name='exercise-search'),
     url(r'^api/v2/ingredient/search/$', nutrition_api_views.search,
-        name='ingredient-search'), url(r'^api/v2/', include(router.urls)), ]
+        name='ingredient-search'),
+    url(r'^api/v2/', include(router.urls)), ]
 
 #
 # URL for user uploaded files, served like this during development only
