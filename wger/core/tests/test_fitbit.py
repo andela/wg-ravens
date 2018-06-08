@@ -1,8 +1,12 @@
+import copy
+import json
+import mock
+import requests_mock
+import unittest
+
 from django.core.urlresolvers import reverse
 from unittest import TestCase
 from fitbit import Fitbit
-import copy
-import json, mock, requests_mock, unittest
 
 
 class TestFitbit(TestCase):
