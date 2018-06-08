@@ -390,5 +390,7 @@ WGER_SETTINGS = {
     'ALLOW_REGISTRATION': True,
     'ALLOW_GUEST_USERS': True,
     'EMAIL_FROM': 'wger Workout Manager <wger@example.com>',
-    'TWITTER': False
+    'TWITTER': False,
+    'FITBIT_CLIENT_ID': True,
+    'FITBIT_CLIENT_SECRET': True
 }
