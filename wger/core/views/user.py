@@ -14,6 +14,11 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 
+import os
+import base64
+import requests
+import datetime
+import decimal
 import logging
 
 from django.shortcuts import render, get_object_or_404
@@ -21,6 +26,7 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.template.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _, ugettext_lazy
+from django.db.utils import IntegrityError
 from django.utils import translation
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth import authenticate
@@ -58,11 +64,15 @@ from wger.manager.models import (
 from wger.nutrition.models import NutritionPlan
 from wger.config.models import GymConfig
 from wger.weight.models import WeightEntry
+from wger.exercises.models import ExerciseCategory, Exercise
 from wger.gym.models import (
     AdminUserNote,
     GymUserConfig,
     Contract
 )
+
+from datetime import date
+from fitbit import FitbitOauth2Client, Fitbit
 
 logger = logging.getLogger(__name__)
 
@@ -528,3 +538,135 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
                                           _('Gym')],
                                  'users': context['object_list']['members']}
         return context
+
+@login_required
+def add_fitbit_support(request, code=None):
+    '''
+    Gets data from fitbit upon the user authorizing Wger to access their data
+    '''
+    template_data = {}
+    client_id = "22CTSR"
+    client_secret = "c268db934dbefbce49d563ab95c88506"
+    redirect_uri = "https://ravens-staging.herokuapp.com/en/user/add_fitbit"
+    # 'https://wg-bulls.herokuapp.com/en/user/add_fitbit'
+    # Get fitbit token from enviromnent variables
+    
+
+    fitbit_client = FitbitOauth2Client(client_id, client_secret)
+
+    if 'code' in request.GET:  # get token
+        code = request.GET.get("code", "")
+        form = {
+            'client_secret': client_secret,
+            'code': code,
+            'client_id': client_id,
+            'grant_type': 'authorization_code',
+            'redirect_uri': redirect_uri
+        }
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            "Authorization": 'Basic MjJDVFNSOmMyNjhkYjkzNGRiZWZiY2U0OWQ1NjNhYjk1Yzg4NTA2'
+        }
+
+        # Get user weight data from fitbit
+        response = requests.post(fitbit_client.request_token_url, form, headers=headers).json()
+        
+        if "access_token" in response:
+            token = response['access_token']
+            user_id = response['user_id']
+            headers['Authorization'] = 'Bearer ' + token
+
+            response_weight = requests.get(
+                'https://api.fitbit.com/1/user/' + user_id + '/profile.json', headers=headers)
+
+            find_error = response_weight.json()
+            for key in find_error.keys():
+                if "errors" in find_error:
+                    messages.info(request, _('Make sure the profile is checked.'))
+                    template_data['fitbit_auth_link'] = fitbit_client.authorize_token_url(
+                        redirect_uri=redirect_uri,
+                        prompt='consent')[0]
+                    return render(request, 'user/fitbit_support.html', template_data)
+
+            else:
+                today = date.today()
+                weight = response_weight.json()['user']['weight']
+                response_nutrition = requests.get(
+                    'https://api.fitbit.com/1/user/' + user_id + '/foods/log/date/{date}.json'.format(
+                        date=today),
+                    headers=headers)
+
+                response_activity = requests.get(
+                    'https://api.fitbit.com/1/user/' + user_id + '/activities/date/{date}.json'.format(
+                        date=today),
+                    headers=headers)
+
+                # add weight and activity to db
+                try:
+                    entry = WeightEntry()
+                    entry.weight = weight
+                    entry.user = request.user
+                    entry.date = datetime.date.today()
+                    entry.save()
+                    messages.success(request, _('Successfully synced weight data.'))
+
+                    if not ExerciseCategory.objects.filter(name='Fitbit'):
+                        fitbit_category = ExerciseCategory()
+                        fitbit_category.name = 'Fitbit'
+                        fitbit_category.save()
+
+                    for detail in response_activity.json()['activities']:
+                        name = detail['name']
+                        description = detail['description']
+
+                        exercise = Exercise()
+                        exercise.name_original = name
+                        exercise.name = name
+                        exercise.category = ExerciseCategory.objects.get(name='Fitbit')
+                        exercise.description = description
+                        exercise.language = Language.objects.get(short_name='en')
+                        exercise.save()
+                except IntegrityError as error:
+                    if error:
+                        messages.info(request, _('Already synced up for today.'))
+                    return render(request, 'user/fitbit_support.html', template_data)
+
+                try:
+                    for food in response_nutrition.json()['foods']:
+                        name = food.get('loggedFood').get('name')
+                        nutritionalValues = food.get('nutritionalValues')
+
+                        if nutritionalValues:
+                            energy = nutritionalValues.get('calories', 0)
+                            protein = nutritionalValues.get('protein', 0)
+                            carbohydrates = nutritionalValues.get('carbs', 0)
+                            fat = nutritionalValues.get('fat', 0)
+                            fibres = nutritionalValues.get('fiber', 0)
+                            sodium = nutritionalValues.get('sodium', 0)
+
+                        ingredient = Ingredient()
+                        if not Ingredient.objects.filter(name=name).exists():
+                            ingredient.user = request.user
+                            ingredient.language = Language.objects.get(short_name='en')
+                            ingredient.name = name
+                            ingredient.energy = energy
+                            ingredient.protein = protein
+                            ingredient.carbohydrates = carbohydrates
+                            ingredient.fat = fat
+                            ingredient.fibres = fibres
+                            ingredient.sodium = sodium
+                            ingredient.save()
+                except IntegrityError as error:
+                    messages.info(request, _('Already synced up for today.'))
+
+                return HttpResponseRedirect(reverse(
+                    'weight:overview', kwargs={'username': request.user.username}))
+        else:
+            messages.warning(request, _('Something went wrong.'))
+            return render(request, 'user/fitbit_support.html', template_data)
+
+    # link to page that makes user authorize wger to access their fitbit
+    template_data['fitbit_auth_link'] = fitbit_client.authorize_token_url(
+        redirect_uri=redirect_uri, prompt='consent')[0]
+    
+    return render(request, 'user/fitbit_support.html', template_data)
