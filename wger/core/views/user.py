@@ -547,7 +547,7 @@ def add_fitbit_support(request, code=None):
     template_data = {}
     client_id = "22CTSR"
     client_secret = "c268db934dbefbce49d563ab95c88506"
-    redirect_uri = "http://127.0.0.1:8000/en/user/add_fitbit"
+    redirect_uri = "https://ravens-staging.herokuapp.com/en/user/add_fitbit"
     # 'https://wg-bulls.herokuapp.com/en/user/add_fitbit'
     # Get fitbit token from enviromnent variables
     
