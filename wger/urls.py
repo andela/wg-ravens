@@ -181,7 +181,8 @@ urlpatterns += [
     url(r'^api/v2/exercise/search/$', exercises_api_views.search,
         name='exercise-search'),
     url(r'^api/v2/ingredient/search/$', nutrition_api_views.search,
-        name='ingredient-search'), url(r'^api/v2/', include(router.urls)), ]
+        name='ingredient-search'),
+    url(r'^api/v2/', include(router.urls)), ]
 
 #
 # URL for user uploaded files, served like this during development only
