@@ -15,10 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Workout Manager.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+from django.http import HttpResponse
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
+from rest_framework.authtoken.models import Token
 
 from wger.core.models import (
     UserProfile,
@@ -49,8 +52,23 @@ class UserViewSet(viewsets.ModelViewSet):
         '''
         Only allow access to users created with an API's Key
         '''
-        users = User.objects.all()
+        api_user = self.get_api_user()
+        users = User.objects.filter(userprofile__gym_id = api_user.userprofile.gym_id)
         return users
+
+    def create(self, request):
+        msg = json.dumps({
+            "message": "User created successfully"
+        })
+        response = HttpResponse(msg)
+        response['content-type'] = 'application/json'
+        return response
+
+    def get_api_user(self):
+        api_key = self.request.META.get('HTTP_AUTHORIZATION').split()[1]
+        token = Token.objects.filter(key=api_key).first()
+        api_user = User.objects.filter(id=token.user_id).first()
+        return api_user
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
