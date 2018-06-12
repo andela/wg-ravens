@@ -33,10 +33,24 @@ from wger.core.api.serializers import (
     DaysOfWeekSerializer,
     LicenseSerializer,
     RepetitionUnitSerializer,
-    WeightUnitSerializer
+    WeightUnitSerializer,
+    UserSerializer
 )
 from wger.core.api.serializers import UserprofileSerializer
 from wger.utils.permissions import UpdateOnlyPermission, WgerPermission
+
+class UserViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint for creating users and listing users
+    '''
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        '''
+        Only allow access to users created with an API's Key
+        '''
+        users = User.objects.all()
+        return users
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
