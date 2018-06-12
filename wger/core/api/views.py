@@ -52,11 +52,29 @@ class UserViewSet(viewsets.ModelViewSet):
         '''
         Only allow access to users created with an API's Key
         '''
-        api_user = self.get_api_user()
-        users = User.objects.filter(userprofile__gym_id = api_user.userprofile.gym_id)
+        users = []
+        token = self.fetch_api_token_object()
+
+        if token:
+            api_user = User.objects.filter(id=token.user_id).first()
+            users = User.objects.filter(userprofile__gym_id = api_user.userprofile.gym_id)
         return users
 
     def create(self, request):
+        token = self.fetch_api_token_object()
+        api_user = User.objects.filter(id=token.user_id).first()
+
+        data = request.data
+        username = data.get('username')
+        password = data.get('password')
+        roles = data.get('roles')
+        # create a new user
+        new_user = User(username=username, password=password)
+        new_user.save()
+
+        new_user.userprofile.gym_id = api_user.userprofile.gym_id
+        new_user.userprofile.created_by = token
+        new_user.userprofile.save()
         msg = json.dumps({
             "message": "User created successfully"
         })
@@ -64,11 +82,13 @@ class UserViewSet(viewsets.ModelViewSet):
         response['content-type'] = 'application/json'
         return response
 
-    def get_api_user(self):
-        api_key = self.request.META.get('HTTP_AUTHORIZATION').split()[1]
+    def fetch_api_token_object(self):
+        api_key = self.request.META.get('HTTP_AUTHORIZATION')
+        if not api_key:
+            return None
+        api_key = api_key.split()[1]
         token = Token.objects.filter(key=api_key).first()
-        api_user = User.objects.filter(id=token.user_id).first()
-        return api_user
+        return token
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
