@@ -17,7 +17,7 @@
 
 import json
 from django.http import HttpResponse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db.utils import IntegrityError
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -68,25 +68,26 @@ class UserViewSet(viewsets.ModelViewSet):
             response = self.make_response_message(message=msg, status=403)
             return response
 
+        # check if token is existent
         api_user = User.objects.filter(id=token.user_id).first()
         if not api_user:
             msg = 'Invalid API Authorization data'
             response = self.make_response_message(message=msg, status=403)
             return response
 
+        # create a new user
         username = request.data.get('username')
         password = request.data.get('password')
-        roles = request.data.get('roles')
-        # create a new user
         try:
-            new_user = User(username=username, password=password)
+            new_user = User.objects.create_user(username=username, password=password)
             new_user.save()
         except IntegrityError as err:
             msg = 'Username already exists'
             response = self.make_response_message(message=msg, status=409)
             return response
 
-
+        roles = request.data.get('roles')
+        self.add_user_roles(user=new_user, roles=roles)
         new_user.userprofile.gym_id = api_user.userprofile.gym_id
         new_user.userprofile.created_by = token
         new_user.userprofile.save()
@@ -110,6 +111,18 @@ class UserViewSet(viewsets.ModelViewSet):
         response = HttpResponse(msg, status=status)
         response['content-type'] = 'application/json'
         return response
+
+    def add_user_roles(self, user, roles):
+        # default role
+        if len(roles) == 0:
+            roles = ['gym_member']
+
+        for name in roles:
+            group = Group.objects.filter(name=name).first()
+            if not group:
+                continue
+            user.groups.add(group)
+
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
