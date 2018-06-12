@@ -18,6 +18,7 @@
 import json
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
@@ -62,24 +63,36 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         token = self.fetch_api_token_object()
-        api_user = User.objects.filter(id=token.user_id).first()
+        if not token:
+            msg = 'API Authorization data required'
+            response = self.make_response_message(message=msg, status=403)
+            return response
 
-        data = request.data
-        username = data.get('username')
-        password = data.get('password')
-        roles = data.get('roles')
+        api_user = User.objects.filter(id=token.user_id).first()
+        if not api_user:
+            msg = 'Invalid API Authorization data'
+            response = self.make_response_message(message=msg, status=403)
+            return response
+
+        username = request.data.get('username')
+        password = request.data.get('password')
+        roles = request.data.get('roles')
         # create a new user
-        new_user = User(username=username, password=password)
-        new_user.save()
+        try:
+            new_user = User(username=username, password=password)
+            new_user.save()
+        except IntegrityError as err:
+            msg = 'Username already exists'
+            response = self.make_response_message(message=msg, status=409)
+            return response
+
 
         new_user.userprofile.gym_id = api_user.userprofile.gym_id
         new_user.userprofile.created_by = token
         new_user.userprofile.save()
-        msg = json.dumps({
-            "message": "User created successfully"
-        })
-        response = HttpResponse(msg)
-        response['content-type'] = 'application/json'
+
+        msg = 'User successfully registered'
+        response = self.make_response_message(message=msg)
         return response
 
     def fetch_api_token_object(self):
@@ -89,6 +102,14 @@ class UserViewSet(viewsets.ModelViewSet):
         api_key = api_key.split()[1]
         token = Token.objects.filter(key=api_key).first()
         return token
+
+    def make_response_message(self, message, status=200):
+        msg = json.dumps({
+            "message": message
+        })
+        response = HttpResponse(msg, status=status)
+        response['content-type'] = 'application/json'
+        return response
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
