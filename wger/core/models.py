@@ -25,6 +25,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from rest_framework.authtoken.models import Token
 from wger.gym.models import Gym
 
 from wger.utils.constants import TWOPLACES
@@ -115,6 +116,14 @@ class UserProfile(models.Model):
                             blank=True)
     '''
     The gym this user belongs to, if any
+    '''
+
+    created_by = models.ForeignKey(Token,
+                             editable=False,
+                             null=True,
+                             blank=True)
+    '''
+    The API key that created the user if created via REST API
     '''
 
     is_temporary = models.BooleanField(default=False,
@@ -509,7 +518,7 @@ class DaysOfWeek(models.Model):
 
     day_of_week = models.CharField(max_length=9,
                                    verbose_name=_('Day of the week'))
-    
+
     plan_type = models.CharField(max_length=9, null=True, blank=True)
 
     class Meta:
