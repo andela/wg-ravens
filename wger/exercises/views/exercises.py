@@ -41,6 +41,7 @@ from django.views.generic import (
 )
 
 from wger.manager.models import WorkoutLog
+from wger.core.models import Language
 from wger.exercises.models import (
     Exercise,
     Muscle,
@@ -77,9 +78,20 @@ class ExerciseListView(ListView):
         '''
         Filter to only active exercises in the configured languages
         '''
-        languages = load_item_languages(LanguageConfig.SHOW_ITEM_EXERCISES)
+        query_language = self.request.GET.get('lang', None)
+        language = None
+
+        if query_language:
+            ln = Language.objects.filter(short_name=query_language)
+            if ln.exists():
+                language = ln.first().id
+        if language:
+            return Exercise.objects.accepted() \
+                .order_by('category__id') \
+                .select_related()
+
+
         return Exercise.objects.accepted() \
-            .filter(language__in=languages) \
             .order_by('category__id') \
             .select_related()
 
