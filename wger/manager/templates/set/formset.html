@@ -11,7 +11,7 @@
                 Configure a drop set for the exercise.
                 <br/>
                 <span>
-                    <strong>percentage</strong> Choose a percentage to drop the sets by
+                    <strong>Drop by</strong> Choose weight to drop the sets by
                 </span>
                 <br/>
                 <span>
@@ -31,7 +31,7 @@
             <div class="pull-right">
                 <div class="col-xs-4">
                     <select class="form-control" id="percSet">
-                        <option disabled selected>Percentage</option>
+                        <option disabled selected>Drop By</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
                         <option value="30">30</option>
@@ -53,11 +53,11 @@
             <div class="row pull-right" style="width:90%">
                 <br/>
                 <div class="col-xs-12">
-                    <a class="btn btn-primary" style="width:95%; margin-left: 8px;" onclick="calcDrops()">Calculate Sets</a>
+                    <a class="btn btn-success" style="width:95%; margin-left: 8px;" onclick="calcDrops()">Calculate Sets</a>
                 </div>
             </div>
         </div>
-    </div>
+</div>
 
 <div id="formset-exercise-{{exercise.id}}" style="margin-top: 1em;">
 <div class="row">
@@ -67,6 +67,7 @@
         </label>
     </div>
 </div>
+
 {{ formset.management_form }}
 
 {% for field in formset %}
@@ -170,7 +171,8 @@
                 weightId = 'id_exercise' + exerciseNo + '-' + i + '-weight';
                 document.getElementById(weightId).value = parseFloat(value).toFixed(0);
                 document.getElementById(repsId).value = noReps;
-                value -= value * (percSet/100)
+                console.log(value)
+                value = value -10
             }
         }
     }
