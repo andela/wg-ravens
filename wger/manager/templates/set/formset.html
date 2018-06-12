@@ -1,5 +1,64 @@
 {% load wger_extras %}
 {% load i18n %}
+
+<div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">
+            Drop sets
+        </label>
+        <div class=" col-md-9">
+            <span class="help-block">
+                Configure a drop set for the exercise.
+                <br/>
+                <span>
+                    <strong>percentage</strong> Choose a percentage to drop the sets by
+                </span>
+                <br/>
+                <span>
+                    <strong>Repetition</strong> Choose a the number of repetitions per set
+                </span>
+                <br/>
+                <span>
+                    <strong>Weight </strong> Choose amount of weight to start from
+                </span>
+                <a href="https://en.wikipedia.org/wiki/Drop_set">Read more on drop sets here.</a>
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <div class="col-xs-4">
+                    <select class="form-control" id="percSet">
+                        <option disabled selected>Percentage</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                        <option value="60">60</option>
+                        <option value="70">70</option>
+                        <option value="80">80</option>
+                        <option value="90">90</option>
+                    </select>
+                </div>
+                <div class="col-xs-4">
+                    <input type="number" id="input-1" onchange="repetitions()" class="form-control" placeholder="Repetitions">
+                </div>
+                <div class="col-xs-4">
+                    <input type="number" id="input-2" onchange="weights()" class="form-control" placeholder="Weight">
+                </div>
+            </div>
+            <div class="row pull-right" style="width:90%">
+                <br/>
+                <div class="col-xs-12">
+                    <a class="btn btn-primary" style="width:95%; margin-left: 8px;" onclick="calcDrops()">Calculate Sets</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <div id="formset-exercise-{{exercise.id}}" style="margin-top: 1em;">
 <div class="row">
     <div class="col-md-offset-2 col-md-10">
@@ -71,3 +130,48 @@
 </div>
 {% endfor %}
 </div>
+
+<script>
+    var noSets = document.getElementById('id_sets').value;
+    var value = '';
+    var noReps = '';
+    var id = document.querySelectorAll('input.form-control')[4].id;
+    var exerciseNo = id.replace(/^\D+|\D.*$/g, '');
+    var repsId = '';
+    var weightId = '';
+    var repClass = '';
+    var weightClass = '';
+    var i = null;
+    function repetitions() {
+        noReps = document.getElementById('input-1').value;
+        if (noReps < 1) {
+            repClass = 'col-xs-3 has-error';
+        } else {
+            repClass = 'col-xs-3';
+        }
+        document.getElementById('col-xs-3').className = repClass;
+    }
+    function weights() {
+        value = document.getElementById('input-2').value;
+        if (value < 30) {
+            weightClass = 'col-xs-4 has-error';
+        } else {
+            weightClass = 'col-xs-4';
+        }
+        document.getElementById('col-xs-4').className = weightClass;
+    }
+    function calcDrops() {
+        var percSet = $('#percSet').val();
+        value = document.getElementById('input-2').value;
+        noReps = document.getElementById('input-1').value;
+        if (noReps && value) {
+            for (i = 0; i <= noSets; i++) {
+                repsId = 'id_exercise' + exerciseNo + '-' + i + '-reps';
+                weightId = 'id_exercise' + exerciseNo + '-' + i + '-weight';
+                document.getElementById(weightId).value = parseFloat(value).toFixed(0);
+                document.getElementById(repsId).value = noReps;
+                value -= value * (percSet/100)
+            }
+        }
+    }
+</script>   
