@@ -73,10 +73,10 @@ class IngredientListView(ListView):
             if ln.exists():
                 language = ln.first().id
         if language:
-            return (Ingredient.objects.filter(language=language).filter(
-                status__in=Ingredient.INGREDIENT_STATUS_OK).only('id', 'name'))
+            return (Ingredient.objects.filter(language=language)
+                    .filter(status__in=Ingredient.INGREDIENT_STATUS_OK).only('id', 'name'))
         return (Ingredient.objects.filter(
-            status__in=Ingredient.INGREDIENT_STATUS_OK).only('id', 'name'))
+                status__in=Ingredient.INGREDIENT_STATUS_OK).only('id', 'name'))
 
     def get_context_data(self, **kwargs):
         '''

@@ -87,6 +87,7 @@ class ExerciseListView(ListView):
                 language = ln.first().id
         if language:
             return Exercise.objects.accepted() \
+                .filter(language=language) \
                 .order_by('category__id') \
                 .select_related()
 
