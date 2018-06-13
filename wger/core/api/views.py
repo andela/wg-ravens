@@ -16,9 +16,13 @@
 # along with Workout Manager.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
+
+from datetime import timedelta
+from django.utils import timezone
 from django.http import HttpResponse
 from django.contrib.auth.models import User, Group
 from django.db.utils import IntegrityError
+from django.db.models import F
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
@@ -58,8 +62,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if token:
             api_user = User.objects.filter(id=token.user_id).first()
-            users = User.objects.filter(userprofile__gym_id = api_user.userprofile.gym_id)
+            users = User.objects.filter(userprofile__created_by = token.key)
         return users
+
 
     def create(self, request):
         token = self.fetch_api_token_object()
@@ -103,6 +108,7 @@ class UserViewSet(viewsets.ModelViewSet):
         token = Token.objects.filter(key=api_key).first()
         return token
 
+
     def make_response_message(self, message, status=200):
         msg = json.dumps({
             "message": message
@@ -110,6 +116,7 @@ class UserViewSet(viewsets.ModelViewSet):
         response = HttpResponse(msg, status=status)
         response['content-type'] = 'application/json'
         return response
+
 
     def add_user_roles(self, user, roles):
         # default role
