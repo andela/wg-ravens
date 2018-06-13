@@ -77,8 +77,18 @@ class UserViewSet(viewsets.ModelViewSet):
         api_user = User.objects.filter(id=token.user_id).first()
         if not api_user:
             msg = 'Invalid API Authorization data'
-            response = self.make_response_message(message=msg, status=403)
-            return response
+            return self.make_response_message(message=msg, status=403)
+
+        # Check if api_user has right to add users via API
+        if not api_user.userprofile.api_add_user_enabled:
+            msg = 'Please request wger admin for API user creation rights'
+            return self.make_response_message(message=msg, status=403)
+
+        # check if api user within API user creation limit
+        user_within_threshold = self.check_api_throughput(api_user)
+        if not user_within_threshold:
+            msg = 'You have reached your API limit. Wait for at most 1 minute.'
+            return self.make_response_message(message=msg, status=403)
 
         # create the user
         username = request.data.get('username')
@@ -110,8 +120,26 @@ class UserViewSet(viewsets.ModelViewSet):
         api_user.userprofile.refresh_from_db()
 
         msg = 'User successfully registered'
-        response = self.make_response_message(message=msg)
-        return response
+        return self.make_response_message(message=msg)
+
+
+    def check_api_throughput(self, user):
+        max_accounts_per_hr = user.userprofile.api_user_throughput_limit_per_min
+        users_created = user.userprofile.api_user_count_this_cycle
+        cycle_begin = user.userprofile.api_throughput_cycle_begin_time
+        time_diff_hr =  (timezone.now() - cycle_begin).seconds // 60
+
+        if time_diff_hr <= 1 and users_created >= max_accounts_per_hr:
+            return False
+
+        if time_diff_hr > 1:
+            # reset cycle
+            print('time diff reset: ', time_diff_hr)
+            user.userprofile.api_throughput_cycle_begin_time = timezone.now()
+            user.userprofile.api_user_count_this_cycle = 0
+            user.userprofile.save()
+        return True
+
 
     def fetch_api_token_object(self):
         api_key = self.request.META.get('HTTP_AUTHORIZATION')
