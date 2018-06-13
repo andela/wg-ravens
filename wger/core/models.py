@@ -17,6 +17,7 @@
 import datetime
 import decimal
 
+from django.utils import timezone
 from django.db import models
 from django.db.models import IntegerField
 from django.contrib.auth.models import User
@@ -124,6 +125,32 @@ class UserProfile(models.Model):
                              blank=True)
     '''
     The API key that created the user if created via REST API
+    '''
+    api_add_user_enabled = models.BooleanField(default=False,
+                                               editable=False)
+    '''
+    If set True, the user can add users via REST API if they have an API key.
+    '''
+
+    api_user_throughput_limit_per_min = models.IntegerField(default=3,
+                                                     null=True,
+                                                     blank=True)
+    '''
+    Sets the maximum numbers of users an API can create per hour
+    '''
+
+    api_user_count_this_cycle = models.IntegerField(default=0,
+                                                    null=True,
+                                                    blank=True)
+    '''
+    Counts the number of users created by an API within the hourly cylce
+    '''
+
+    api_throughput_cycle_begin_time = models.DateTimeField(default=timezone.now,
+                                                           blank=True,
+                                                           null=True)
+    '''
+    Keeps track of time to help determine the hourly rate of user creation for an API
     '''
 
     is_temporary = models.BooleanField(default=False,

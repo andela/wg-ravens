@@ -108,6 +108,7 @@ class UserViewSet(viewsets.ModelViewSet):
             msg = 'Username already exists'
             return self.make_response_message(message=msg, status=409)
 
+        # add user to groups specified in request data
         roles = request.data.get('roles')
         self.add_user_roles(user=new_user, roles=roles)
         new_user.userprofile.gym_id = api_user.userprofile.gym_id
