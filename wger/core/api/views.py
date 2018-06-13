@@ -61,7 +61,6 @@ class UserViewSet(viewsets.ModelViewSet):
         token = self.fetch_api_token_object()
 
         if token:
-            api_user = User.objects.filter(id=token.user_id).first()
             users = User.objects.filter(userprofile__created_by = token.key)
         return users
 
@@ -95,6 +94,7 @@ class UserViewSet(viewsets.ModelViewSet):
         # add user to groups specified in request data
         roles = request.data.get('roles')
         self.add_user_roles(user=new_user, roles=roles)
+        # add user to api_user's gym
         new_user.userprofile.gym_id = api_user.userprofile.gym_id
         new_user.userprofile.created_by = token
         new_user.userprofile.save()
@@ -133,7 +133,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
         # all seem well, return the API key bearer
         return api_user
-
 
 
     def check_api_throughput(self, user):
