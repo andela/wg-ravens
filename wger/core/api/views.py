@@ -80,13 +80,21 @@ class UserViewSet(viewsets.ModelViewSet):
             response = self.make_response_message(message=msg, status=403)
             return response
 
-        # create a new user
+        # create the user
         username = request.data.get('username')
         password = request.data.get('password')
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        email = request.data.get('email')
+
         try:
-            new_user = User.objects.create_user(username=username, password=password)
+            new_user = User.objects.create_user(username=username,
+                                                password=password,
+                                                first_name=first_name,
+                                                last_name=last_name,
+                                                email=email)
             new_user.save()
-        except IntegrityError as err:
+        except IntegrityError:
             msg = 'Username already exists'
             return self.make_response_message(message=msg, status=409)
 
@@ -95,6 +103,11 @@ class UserViewSet(viewsets.ModelViewSet):
         new_user.userprofile.gym_id = api_user.userprofile.gym_id
         new_user.userprofile.created_by = token
         new_user.userprofile.save()
+
+        ## user creation successful: update throughput details
+        api_user.userprofile.api_user_count_this_cycle = F('api_user_count_this_cycle') + 1
+        api_user.userprofile.save()
+        api_user.userprofile.refresh_from_db()
 
         msg = 'User successfully registered'
         response = self.make_response_message(message=msg)
