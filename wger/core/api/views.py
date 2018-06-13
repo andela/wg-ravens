@@ -65,8 +65,8 @@ class UserViewSet(viewsets.ModelViewSet):
         token = self.fetch_api_token_object()
         if not token:
             msg = 'API Authorization data required'
-            response = self.make_response_message(message=msg, status=403)
-            return response
+            return self.make_response_message(message=msg, status=403)
+
 
         # check if token is existent
         api_user = User.objects.filter(id=token.user_id).first()
@@ -83,8 +83,7 @@ class UserViewSet(viewsets.ModelViewSet):
             new_user.save()
         except IntegrityError as err:
             msg = 'Username already exists'
-            response = self.make_response_message(message=msg, status=409)
-            return response
+            return self.make_response_message(message=msg, status=409)
 
         roles = request.data.get('roles')
         self.add_user_roles(user=new_user, roles=roles)
