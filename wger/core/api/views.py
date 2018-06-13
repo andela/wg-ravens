@@ -72,10 +72,10 @@ class UserViewSet(viewsets.ModelViewSet):
             msg = 'API Authorization data required'
             return self.make_response_message(message=msg, status=403)
 
-
         # check if token is existent
-        api_user = User.objects.filter(id=token.user_id).first()
-        if not api_user:
+        try:
+            api_user = User.objects.get(id=token.user_id)
+        except User.DoesNotExist:
             msg = 'Invalid API Authorization data'
             return self.make_response_message(message=msg, status=403)
 
@@ -96,7 +96,6 @@ class UserViewSet(viewsets.ModelViewSet):
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
         email = request.data.get('email')
-
         try:
             new_user = User.objects.create_user(username=username,
                                                 password=password,
