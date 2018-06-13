@@ -134,7 +134,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if time_diff_hr > 1:
             # reset cycle
-            print('time diff reset: ', time_diff_hr)
             user.userprofile.api_throughput_cycle_begin_time = timezone.now()
             user.userprofile.api_user_count_this_cycle = 0
             user.userprofile.save()
