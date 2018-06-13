@@ -150,7 +150,7 @@ class UserProfile(models.Model):
                                                            blank=True,
                                                            null=True)
     '''
-    Keeps track of time to help determine the hourly rate of user creation for an API
+    Keeps track of time to help determine the per minute rate of user creation for an API
     '''
 
     is_temporary = models.BooleanField(default=False,

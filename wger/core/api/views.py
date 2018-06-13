@@ -61,11 +61,14 @@ class UserViewSet(viewsets.ModelViewSet):
         token = self.fetch_api_token_object()
 
         if token:
-            users = User.objects.filter(userprofile__created_by = token.key)
+            users = User.objects.filter(userprofile__created_by=token.key)
         return users
 
 
     def create(self, request):
+        '''
+        Attempts to create a user via ReST API
+        '''
         token = self.fetch_api_token_object()
         validation_output = self.validate_user_api_conditions(token)
         # returns an error HttpResponse object if any condition fails, or a user to whom API key is registered if all pass
@@ -109,6 +112,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     def validate_user_api_conditions(self, token, api_user=None):
+        '''
+        Verifies that all conditions for using the ReST API to create users are fulfilled
+        '''
         if not token:
             msg = 'API Authorization data required'
             return self.make_response_message(message=msg, status=403)
@@ -136,15 +142,18 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     def check_api_throughput(self, user):
+        '''
+        Checks if a user has surpassed the limit of user accounts they can create per minute. A simple protection against third-party applications flooding database with user accounts
+        '''
         max_accounts_per_hr = user.userprofile.api_user_throughput_limit_per_min
         users_created = user.userprofile.api_user_count_this_cycle
         cycle_begin = user.userprofile.api_throughput_cycle_begin_time
-        time_diff_hr =  (timezone.now() - cycle_begin).seconds // 60
+        time_diff_min =  (timezone.now() - cycle_begin).seconds // 60
 
-        if time_diff_hr <= 1 and users_created >= max_accounts_per_hr:
+        if time_diff_min <= 1 and users_created >= max_accounts_per_hr:
             return False
 
-        if time_diff_hr > 1:
+        if time_diff_min >= 1:
             # reset cycle
             user.userprofile.api_throughput_cycle_begin_time = timezone.now()
             user.userprofile.api_user_count_this_cycle = 0
@@ -153,6 +162,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     def fetch_api_token_object(self):
+        '''
+        Extracts API key from request headers and gets a ReST API Token object from the database
+        '''
         api_key = self.request.META.get('HTTP_AUTHORIZATION')
         if not api_key:
             return None
@@ -162,6 +174,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     def make_response_message(self, message, status=200):
+        '''
+        For making JSON responses
+        '''
         msg = json.dumps({
             "message": message
         })
@@ -171,6 +186,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     def add_user_roles(self, user, roles):
+        '''
+        Adds new user to groups specified by roles in incoming POST data
+        '''
         # default role
         if len(roles) == 0:
             roles = ['gym_member']
