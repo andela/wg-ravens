@@ -68,27 +68,12 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         token = self.fetch_api_token_object()
-        if not token:
-            msg = 'API Authorization data required'
-            return self.make_response_message(message=msg, status=403)
-
-        # check if token is existent
-        try:
-            api_user = User.objects.get(id=token.user_id)
-        except User.DoesNotExist:
-            msg = 'Invalid API Authorization data'
-            return self.make_response_message(message=msg, status=403)
-
-        # Check if api_user has right to add users via API
-        if not api_user.userprofile.api_add_user_enabled:
-            msg = 'Please request wger admin for API user creation rights'
-            return self.make_response_message(message=msg, status=403)
-
-        # check if api user within API user creation limit
-        user_within_threshold = self.check_api_throughput(api_user)
-        if not user_within_threshold:
-            msg = 'You have reached your API limit. Wait for at most 1 minute.'
-            return self.make_response_message(message=msg, status=403)
+        validation_output = self.validate_user_api_conditions(token)
+        # returns an error HttpResponse object if any condition fails, or a user to whom API key is registered if all pass
+        if isinstance(validation_output, HttpResponse):
+            return validation_output
+        else:
+            api_user = validation_output
 
         # create the user
         username = request.data.get('username')
@@ -121,6 +106,34 @@ class UserViewSet(viewsets.ModelViewSet):
 
         msg = 'User successfully registered'
         return self.make_response_message(message=msg)
+
+
+    def validate_user_api_conditions(self, token, api_user=None):
+        if not token:
+            msg = 'API Authorization data required'
+            return self.make_response_message(message=msg, status=403)
+
+        # check if token is existent
+        try:
+            api_user = User.objects.get(id=token.user_id)
+        except User.DoesNotExist:
+            msg = 'Invalid API Authorization data'
+            return self.make_response_message(message=msg, status=403)
+
+        # Check if api_user has right to add users via API
+        if not api_user.userprofile.api_add_user_enabled:
+            msg = 'Please request wger admin for API user creation rights'
+            return self.make_response_message(message=msg, status=403)
+
+        # check if api user within API user creation limit
+        user_within_threshold = self.check_api_throughput(api_user)
+        if not user_within_threshold:
+            msg = 'You have reached your API limit. Wait for at most 1 minute.'
+            return self.make_response_message(message=msg, status=403)
+
+        # all seem well, return the API key bearer
+        return api_user
+
 
 
     def check_api_throughput(self, user):
