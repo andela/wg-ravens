@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
 
-    # @staticmethod
+
     def extract_valid_fields(self, data):
         user_data = {}
         valid_fields = [*self.__class__.Meta.fields, 'password']

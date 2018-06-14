@@ -105,7 +105,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def validate_user_api_conditions(self, token, api_user=None):
         '''
-        Verifies that all conditions for using the ReST API to create users are fulfilled. Returns an error HttpResponse object if unsuccessful or the API key bearer if all well
+        Verifies that all conditions for using the ReST API to create users are
+        fulfilled. Returns an error HttpResponse object if unsuccessful or the
+        API key bearer if all well
         '''
         # Check if api_user has right to add users via API
         if not api_user.userprofile.api_add_user_enabled:
@@ -121,7 +123,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def check_api_throughput(self, user):
         '''
-        Checks if a user has surpassed the limit of user accounts they can create per minute. A simple protection against third-party applications flooding database with user accounts
+        Checks if a user has surpassed the limit of user accounts they can
+        create per minute. A simple protection against third-party applications
+        flooding database with user accounts
         '''
         max_accounts = user.userprofile.api_user_throughput_limit_per_min
         accounts_created = user.userprofile.api_user_count_this_cycle
@@ -141,7 +145,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def fetch_api_token_object(self):
         '''
-        Extracts API key from request headers and gets a ReST API Token object from the database
+        Extracts API key from request headers and gets a ReST API Token object
+        from the database
         '''
         api_key = self.request.auth
         if not api_key:
