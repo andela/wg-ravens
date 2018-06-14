@@ -71,19 +71,15 @@ class UserViewSet(viewsets.ModelViewSet):
         '''
         token = self.fetch_api_token_object()
         validation_output = self.validate_user_api_conditions(token)
-        # returns an error HttpResponse object if any condition fails, or a user to whom API key is registered if all pass
+        # returns an error HttpResponse object if any condition fails, or a
+        # user to whom API key is registered if all pass
         if isinstance(validation_output, HttpResponse):
             return validation_output
         else:
             api_user = validation_output
 
         # create the user
-        user_data = {}
-        fields = ['username', 'password', 'first_name', 'last_name', 'email']
-        for field in fields:
-            val = request.data.get(field)
-            if val:
-                user_data[field] = val
+        user_data = self.serializer_class().extract_valid_fields(request.data)
         ## persist user
         try:
             new_user = User.objects.create_user(**user_data)

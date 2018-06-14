@@ -31,6 +31,17 @@ class UserSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = User
+        fields = ['username', 'password', 'first_name', 'last_name', 'email']
+
+    # @staticmethod
+    def extract_valid_fields(self, data):
+        user_data = {}
+        for field in self.__class__.Meta.fields:
+            val = data.get(field)
+            if val:
+                user_data[field] = val
+        print(user_data)
+        return user_data
 
 
 class UserprofileSerializer(serializers.ModelSerializer):
