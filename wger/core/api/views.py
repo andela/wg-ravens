@@ -78,17 +78,15 @@ class UserViewSet(viewsets.ModelViewSet):
             api_user = validation_output
 
         # create the user
-        username = request.data.get('username')
-        password = request.data.get('password')
-        first_name = request.data.get('first_name')
-        last_name = request.data.get('last_name')
-        email = request.data.get('email')
+        user_data = {}
+        fields = ['username', 'password', 'first_name', 'last_name', 'email']
+        for field in fields:
+            val = request.data.get(field)
+            if val:
+                user_data[field] = val
+        ## persist user
         try:
-            new_user = User.objects.create_user(username=username,
-                                                password=password,
-                                                first_name=first_name,
-                                                last_name=last_name,
-                                                email=email)
+            new_user = User.objects.create_user(**user_data)
             new_user.save()
         except IntegrityError:
             msg = 'Username already exists'
