@@ -69,14 +69,12 @@ class UserViewSet(viewsets.ModelViewSet):
         '''
         Attempts to create a user via ReST API
         '''
+        api_user = request.user
         token = self.fetch_api_token_object()
-        validation_output = self.validate_user_api_conditions(token)
-        # returns an error HttpResponse object if any condition fails, or a
-        # user to whom API key is registered if all pass
-        if isinstance(validation_output, HttpResponse):
-            return validation_output
-        else:
-            api_user = validation_output
+        result = self.validate_user_api_conditions(token, api_user)
+        # returns an error HttpResponse object if any condition fails
+        if isinstance(result, HttpResponse):
+            return result
 
         # create the user
         user_data = self.serializer_class().extract_valid_fields(request.data)
@@ -91,6 +89,7 @@ class UserViewSet(viewsets.ModelViewSet):
         # add user to groups specified in request data
         roles = request.data.get('roles')
         self.add_user_roles(user=new_user, roles=roles)
+
         # add user to api_user's gym
         new_user.userprofile.gym_id = api_user.userprofile.gym_id
         new_user.userprofile.created_by = token
@@ -99,7 +98,6 @@ class UserViewSet(viewsets.ModelViewSet):
         ## user creation successful: update throughput details
         api_user.userprofile.api_user_count_this_cycle = F('api_user_count_this_cycle') + 1
         api_user.userprofile.save()
-        api_user.userprofile.refresh_from_db()
 
         msg = 'User successfully registered'
         return self.make_response_message(message=msg)
@@ -109,17 +107,6 @@ class UserViewSet(viewsets.ModelViewSet):
         '''
         Verifies that all conditions for using the ReST API to create users are fulfilled. Returns an error HttpResponse object if unsuccessful or the API key bearer if all well
         '''
-        if not token:
-            msg = 'API Authorization data required'
-            return self.make_response_message(message=msg, status=403)
-
-        # check if token is existent
-        try:
-            api_user = User.objects.get(id=token.user_id)
-        except User.DoesNotExist:
-            msg = 'Invalid API Authorization data'
-            return self.make_response_message(message=msg, status=403)
-
         # Check if api_user has right to add users via API
         if not api_user.userprofile.api_add_user_enabled:
             msg = 'Please request wger admin for API user creation rights'
@@ -130,9 +117,6 @@ class UserViewSet(viewsets.ModelViewSet):
         if not user_within_threshold:
             msg = 'You have reached your API limit. Wait for at most 1 minute.'
             return self.make_response_message(message=msg, status=403)
-
-        # all seem well, return the API key bearer
-        return api_user
 
 
     def check_api_throughput(self, user):
@@ -159,10 +143,9 @@ class UserViewSet(viewsets.ModelViewSet):
         '''
         Extracts API key from request headers and gets a ReST API Token object from the database
         '''
-        api_key = self.request.META.get('HTTP_AUTHORIZATION')
+        api_key = self.request.auth
         if not api_key:
             return None
-        api_key = api_key.split()[1]
         token = Token.objects.filter(key=api_key).first()
         return token
 
@@ -172,7 +155,7 @@ class UserViewSet(viewsets.ModelViewSet):
         For making JSON responses
         '''
         msg = json.dumps({
-            "message": message
+            "detail": message
         })
         response = HttpResponse(msg, status=status)
         response['content-type'] = 'application/json'
