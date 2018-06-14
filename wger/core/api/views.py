@@ -111,7 +111,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def validate_user_api_conditions(self, token, api_user=None):
         '''
-        Verifies that all conditions for using the ReST API to create users are fulfilled
+        Verifies that all conditions for using the ReST API to create users are fulfilled. Returns an error HttpResponse object if unsuccessful or the API key bearer if all well
         '''
         if not token:
             msg = 'API Authorization data required'
