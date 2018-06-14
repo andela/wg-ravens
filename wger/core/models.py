@@ -127,7 +127,7 @@ class UserProfile(models.Model):
     The API key that created the user if created via REST API
     '''
     api_add_user_enabled = models.BooleanField(default=False,
-                                               editable=False)
+                                               editable=True)
     '''
     If set True, the user can add users via REST API if they have an API key.
     '''
@@ -141,14 +141,16 @@ class UserProfile(models.Model):
 
     api_user_count_this_cycle = models.IntegerField(default=0,
                                                     null=True,
-                                                    blank=True)
+                                                    blank=True,
+                                                    editable=False)
     '''
     Counts the number of users created by an API within the hourly cylce
     '''
 
     api_throughput_cycle_begin_time = models.DateTimeField(default=timezone.now,
                                                            blank=True,
-                                                           null=True)
+                                                           null=True,
+                                                           editable=False)
     '''
     Keeps track of time to help determine the per minute rate of user creation for an API
     '''
