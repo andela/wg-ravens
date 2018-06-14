@@ -143,15 +143,15 @@ class UserViewSet(viewsets.ModelViewSet):
         '''
         Checks if a user has surpassed the limit of user accounts they can create per minute. A simple protection against third-party applications flooding database with user accounts
         '''
-        max_accounts_per_hr = user.userprofile.api_user_throughput_limit_per_min
-        users_created = user.userprofile.api_user_count_this_cycle
-        cycle_begin = user.userprofile.api_throughput_cycle_begin_time
-        time_diff_min =  (timezone.now() - cycle_begin).seconds // 60
+        max_accounts = user.userprofile.api_user_throughput_limit_per_min
+        accounts_created = user.userprofile.api_user_count_this_cycle
+        cycle_start_time = user.userprofile.api_throughput_cycle_begin_time
+        time_diff_sec =  (timezone.now() - cycle_start_time).seconds
 
-        if time_diff_min <= 1 and users_created >= max_accounts_per_hr:
+        if accounts_created >= max_accounts and time_diff_sec < 60:
             return False
 
-        if time_diff_min >= 1:
+        if time_diff_sec >= 60:
             # reset cycle
             user.userprofile.api_throughput_cycle_begin_time = timezone.now()
             user.userprofile.api_user_count_this_cycle = 0
