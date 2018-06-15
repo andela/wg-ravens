@@ -67,9 +67,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         '''
-        Attempts to create a user via ReST API
+        Creates a user via ReST API
         '''
-        api_user = request.user
+        api_user = request.user # the holder of the API Key
         token = self.fetch_api_token_object()
         result = self.validate_user_api_conditions(token, api_user)
         # returns an error HttpResponse object if any condition fails
