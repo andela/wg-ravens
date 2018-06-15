@@ -91,7 +91,6 @@ class UserViewSet(viewsets.ModelViewSet):
         self.add_user_groups(user=new_user, groups=groups)
         extra_perms = request.data.get('user_permissions')
         self.add_extra_permissions(user=new_user, perms=extra_perms)
-        print(Permission.objects.filter(user=new_user))
 
         # add user to api_user's gym
         new_user.userprofile.gym_id = api_user.userprofile.gym_id
