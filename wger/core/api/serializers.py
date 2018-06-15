@@ -31,17 +31,30 @@ class UserSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
+        fields = ['id',
+                  'username',
+                  'first_name',
+                  'last_name',
+                  'email',
+                  'is_superuser',
+                  'is_staff',
+                  'is_active',
+                  'groups',
+                  'user_permissions']
 
 
     def extract_valid_fields(self, data):
+        '''
+        Extracts data for the user table columns only. No relationships.
+        '''
         user_data = {}
         valid_fields = [*self.__class__.Meta.fields, 'password']
         for field in valid_fields:
+            if field in ('groups', 'user_permissions'):
+                continue
             val = data.get(field)
             if val:
                 user_data[field] = val
-        print(user_data)
         return user_data
 
 
