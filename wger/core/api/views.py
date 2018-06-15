@@ -20,7 +20,7 @@ import json
 from datetime import timedelta
 from django.utils import timezone
 from django.http import HttpResponse
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.db.utils import IntegrityError
 from django.db.models import F
 from rest_framework import viewsets
@@ -86,9 +86,12 @@ class UserViewSet(viewsets.ModelViewSet):
             msg = 'Username already exists'
             return self.make_response_message(message=msg, status=409)
 
-        # add user to groups specified in request data
-        roles = request.data.get('roles')
-        self.add_user_roles(user=new_user, roles=roles)
+        # add user to groups and permissions specified in request data
+        groups = request.data.get('groups')
+        self.add_user_groups(user=new_user, groups=groups)
+        extra_perms = request.data.get('user_permissions')
+        self.add_extra_permissions(user=new_user, perms=extra_perms)
+        print(Permission.objects.filter(user=new_user))
 
         # add user to api_user's gym
         new_user.userprofile.gym_id = api_user.userprofile.gym_id
@@ -127,9 +130,10 @@ class UserViewSet(viewsets.ModelViewSet):
         create per minute. A simple protection against third-party applications
         flooding database with user accounts
         '''
-        max_accounts = user.userprofile.api_user_throughput_limit_per_min
-        accounts_created = user.userprofile.api_user_count_this_cycle
-        cycle_start_time = user.userprofile.api_throughput_cycle_begin_time
+        profile = user.userprofile
+        max_accounts = profile.api_user_throughput_limit_per_min
+        accounts_created = profile.api_user_count_this_cycle
+        cycle_start_time = profile.api_throughput_cycle_begin_time
         time_diff_sec =  (timezone.now() - cycle_start_time).seconds
 
         if accounts_created >= max_accounts and time_diff_sec < 60:
@@ -137,9 +141,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if time_diff_sec >= 60:
             # reset cycle
-            user.userprofile.api_throughput_cycle_begin_time = timezone.now()
-            user.userprofile.api_user_count_this_cycle = 0
-            user.userprofile.save()
+            profile.api_throughput_cycle_begin_time = timezone.now()
+            profile.api_user_count_this_cycle = 0
+            profile.save()
         return True
 
 
@@ -166,16 +170,23 @@ class UserViewSet(viewsets.ModelViewSet):
         response['content-type'] = 'application/json'
         return response
 
+    def add_extra_permissions(self, user, perms):
+        for codename in perms:
+            perm = Permission.objects.filter(codename=codename).first()
+            if not perm:
+                continue
+            user.user_permissions.add(perm)
 
-    def add_user_roles(self, user, roles):
+
+    def add_user_groups(self, user, groups):
         '''
         Adds new user to groups specified by roles in incoming POST data
         '''
         # default role
-        if len(roles) == 0:
+        if len(groups) == 0:
             roles = ['gym_member']
 
-        for name in roles:
+        for name in groups:
             group = Group.objects.filter(name=name).first()
             if not group:
                 continue
