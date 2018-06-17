@@ -49,15 +49,6 @@ class AbstractLicenseModel(models.Model):
                                                    ' licenses e.g. the CC-BY-SA.'))
     '''The author if it is not the uploader'''
 
-    # license_author = models.CharField(verbose_name=_('Author'),
-    #                                   max_length=50,
-    #                                   blank=True,
-    #                                   null=True,
-    #                                   help_text=_('If you are not the author, enter the name or '
-    #                                               'source here. This is needed for some licenses '
-    #                                               'e.g. the CC-BY-SA.'))
-    # '''The author if it is not the uploader'''
-
 
 class AbstractSubmissionModel(models.Model):
     '''
