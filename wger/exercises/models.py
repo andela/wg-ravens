@@ -34,7 +34,7 @@ from django.core.cache import cache
 from django.core.validators import MinLengthValidator
 from django.conf import settings
 
-from wger.core.models import Language
+from wger.core.models import Language, Author
 from wger.utils.helpers import smart_capitalize
 from wger.utils.managers import SubmissionManager
 from wger.utils.models import AbstractLicenseModel, AbstractSubmissionModel
@@ -303,45 +303,58 @@ class Exercise(AbstractSubmissionModel, AbstractLicenseModel, models.Model):
         submitted exercises only)
         '''
         try:
-            user = User.objects.get(username=self.license_author)
+            user = User.objects.get(username=self.license_author.name)
         except User.DoesNotExist:
             return
-        if self.license_author and user.email:
-            translation.activate(user.userprofile.notification_language.short_name)
+        if self.license_author.name and user.email:
+            translation.activate(
+                user.userprofile.notification_language.short_name)
             url = request.build_absolute_uri(self.get_absolute_url())
-            subject = _('Exercise was successfully added to the general database')
+            subject = _(
+                'Exercise was successfully added to the general database')
             context = {
                 'exercise': self.name,
                 'url': url,
                 'site': Site.objects.get_current().domain
             }
             message = render_to_string('exercise/email_new.tpl', context)
-            mail.send_mail(subject,
-                           message,
-                           settings.WGER_SETTINGS['EMAIL_FROM'],
-                           [user.email],
-                           fail_silently=True)
+            mail.send_mail(
+                subject,
+                message,
+                settings.WGER_SETTINGS['EMAIL_FROM'], [user.email],
+                fail_silently=True)
 
     def set_author(self, request):
         '''
         Set author and status
-
         This is only used when creating exercises (via web or API)
         '''
         if request.user.has_perm('exercises.add_exercise'):
             self.status = self.STATUS_ACCEPTED
             if not self.license_author:
-                self.license_author = request.get_host().split(':')[0]
+                name = request.get_host().split(':')[0]
+                author = Author.objects.filter(name=name).first()
+                if not author:
+                    author = Author(name=name)
+                    author.save()
+                self.license_author = author
         else:
             if not self.license_author:
-                self.license_author = request.user.username
+                name = request.user.username
+                author = Author.objects.filter(name=name).first()
+                if not author:
+                    author = Author(name=name)
+                    author.save()
+                self.license_author = author
 
             subject = _('New user submitted exercise')
-            message = _(u'The user {0} submitted a new exercise "{1}".').format(
-                request.user.username, self.name)
-            mail.mail_admins(six.text_type(subject),
-                             six.text_type(message),
-                             fail_silently=True)
+            message = _(
+                u'The user {0} submitted a new exercise "{1}".').format(
+                    request.user.username, self.name)
+            mail.mail_admins(
+                six.text_type(subject),
+                six.text_type(message),
+                fail_silently=True)
 
 
 def exercise_image_upload_dir(instance, filename):
@@ -442,26 +455,34 @@ class ExerciseImage(AbstractSubmissionModel, AbstractLicenseModel, models.Model)
     def set_author(self, request):
         '''
         Set author and status
-
         This is only used when creating images (via web or API)
         '''
         if request.user.has_perm('exercises.add_exerciseimage'):
             self.status = self.STATUS_ACCEPTED
             if not self.license_author:
-                self.license_author = request.get_host().split(':')[0]
-
+                name = request.get_host().split(':')[0]
+                author = Author.objects.filter(name=name).first()
+                if not author:
+                    author = Author(name=name)
+                    author.save()
+                self.license_author = author
         else:
             if not self.license_author:
-                self.license_author = request.user.username
+                name = request.user.username
+                author = Author.objects.filter(name=name).first()
+                if not author:
+                    author = Author(name=name)
+                    author.save()
+                self.license_author = author
 
             subject = _('New user submitted image')
-            message = _(u'The user {0} submitted a new image "{1}" for exercise {2}.').format(
-                request.user.username,
-                self.name,
-                self.exercise)
-            mail.mail_admins(six.text_type(subject),
-                             six.text_type(message),
-                             fail_silently=True)
+            message = _(
+                u'The user {0} submitted a new image "{1}" for exercise {2}.'
+            ).format(request.user.username, self.name, self.exercise)
+            mail.mail_admins(
+                six.text_type(subject),
+                six.text_type(message),
+                fail_silently=True)
 
 
 @python_2_unicode_compatible

@@ -1,0 +1,296 @@
+[
+    {
+        "pk": 1,
+        "fields": {
+            "name": "wger.de"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 2,
+        "fields": {
+            "name": "flori"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 3,
+        "fields": {
+            "name": "Vl2V2sP42RNfDng1zCSZB7fZqlo"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 4,
+        "fields": {
+            "name": "WrmZ"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 5,
+        "fields": {
+            "name": "minifigmaster125"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 6,
+        "fields": {
+            "name": "Mahoney"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 7,
+        "fields": {
+            "name": "robhoyt"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 8,
+        "fields": {
+            "name": "kwrindy"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 9,
+        "fields": {
+            "name": "djblitzd"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 10,
+        "fields": {
+            "name": "oliser67"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 11,
+        "fields": {
+            "name": "OGhTebfCxhexZXuf35mUxV9C--A"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 12,
+        "fields": {
+            "name": "Horal_cz"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 13,
+        "fields": {
+            "name": "drthurlow"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 14,
+        "fields": {
+            "name": "sistab2"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 15,
+        "fields": {
+            "name": "cgoob883"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 16,
+        "fields": {
+            "name": "powerade69"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 17,
+        "fields": {
+            "name": "maxamillion1414"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 19,
+        "fields": {
+            "name": "ThisGirl0819"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 20,
+        "fields": {
+            "name": "Nallitnas"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 21,
+        "fields": {
+            "name": "richmr2174@gmail.com"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 22,
+        "fields": {
+            "name": "Behrooz"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 23,
+        "fields": {
+            "name": "techbearable"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 24,
+        "fields": {
+            "name": "pwiltrout"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 25,
+        "fields": {
+            "name": "bobbyprince89"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 26,
+        "fields": {
+            "name": "http://www.wikifit.de"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 27,
+        "fields": {
+            "name": "Araaosf"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 28,
+        "fields": {
+            "name": "Chippo"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 29,
+        "fields": {
+            "name": "chris"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 30,
+        "fields": {
+            "name": "James Mackay"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 31,
+        "fields": {
+            "name": "Nash"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 32,
+        "fields": {
+            "name": "silke"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 33,
+        "fields": {
+            "name": "miguelaprovencio"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 34,
+        "fields": {
+            "name": "sebk"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 35,
+        "fields": {
+            "name": "geraldbaeck"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 36,
+        "fields": {
+            "name": "er0355"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 37,
+        "fields": {
+            "name": "Tetsuhiko Asai"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 38,
+        "fields": {
+            "name": "pjwirth"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 39,
+        "fields": {
+            "name": "Magenta"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 40,
+        "fields": {
+            "name": "Clegg89"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 41,
+        "fields": {
+            "name": "http://kulturistika.ronnie.cz/c-17541-zasobnik-cvi"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 42,
+        "fields": {
+            "name": "perteus"
+        },
+        "model": "core.author"
+    },
+    {
+        "pk": 43,
+        "fields": {
+            "name": "Photo of machine user information"
+        },
+        "model": "core.author"
+    }
+]

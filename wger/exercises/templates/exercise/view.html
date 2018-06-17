@@ -161,9 +161,9 @@ $(document).ready(function() {
 
                         <br>
                         {{image.get_license_display}}
-                        {% if image.license_author %}
-                             – {{image.license_author}}
-                        {% endif %}
+                        {% if image.license_author.name %}
+                             – {{image.license_author.name}}
+                         {% endif %}
 
                     </div>
                 </div>

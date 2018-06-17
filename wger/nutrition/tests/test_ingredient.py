@@ -73,7 +73,7 @@ class EditIngredientTestCase(WorkoutManagerEditTestCase):
             'protein': 20,
             'carbohydrates': 10,
             'license': 2,
-            'license_author': 'me!'}
+            'license_author': 'test'}
 
     def post_test_hook(self):
         '''
@@ -102,7 +102,7 @@ class AddIngredientTestCase(WorkoutManagerAddTestCase):
             'protein': 20,
             'carbohydrates': 10,
             'license': 2,
-            'license_author': 'me!'}
+            'license_author': 'test'}
 
     def post_test_hook(self):
         '''

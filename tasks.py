@@ -241,6 +241,7 @@ def load_fixtures(context, settings_path=None):
     call_command("loaddata", path + "languages.json")
     call_command("loaddata", path + "groups.json")
     call_command("loaddata", path + "users.json")
+    call_command("loaddata", path + "authors.json")
     call_command("loaddata", path + "licenses.json")
     call_command("loaddata", path + "days_of_week.json")
     call_command("loaddata", path + "setting_repetition_units.json")
