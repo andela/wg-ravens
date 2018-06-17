@@ -31,9 +31,20 @@
     </div>
 {% endblock %}
 
-
+<div class="container-fluid"></div>
 {% block options %}
 <a href="{% url 'manager:workout:add' %}" class="btn btn-success btn-sm">
     {% trans "Add workout" %}
 </a>
+</div>
+<div class="container-fluid">
+    <form action="{% url 'manager:workout:import_workout' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <h5>{% trans "Import workout (.cvs file)" %}:</h5>
+    
+        <p><input type="file" name="csv_file" /></p>
+    
+        <input type="submit" value="Import Workout" class="btn btn-success btn-sm" />
+    </form>
+</div>
+
 {% endblock %}
