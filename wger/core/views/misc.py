@@ -29,6 +29,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as django_login
 from django.template.loader import render_to_string
+from django.contrib.auth.models import User
+from django.db.models import Min
+from django.db.models import Max
 
 
 from wger.core.forms import FeedbackRegisteredForm, FeedbackAnonymousForm
@@ -38,6 +41,11 @@ from wger.manager.models import Schedule
 from wger.nutrition.models import NutritionPlan
 from wger.weight.models import WeightEntry
 from wger.weight.helpers import get_last_entries
+from wger.weight import helpers
+from wger.utils.helpers import check_access
+
+
+
 
 
 logger = logging.getLogger(__name__)
@@ -79,6 +87,45 @@ def demo_entries(request):
                                     'better see what  this site can do. Feel free to edit or '
                                     'delete them!'))
     return HttpResponseRedirect(reverse('core:dashboard'))
+
+def comparison(request, username=None):
+    '''
+    Analysis view
+    '''
+    users = list(User.objects.all())
+
+    is_owner, user = check_access(request.user, username)
+    others = User.objects.exclude(username=user.username)
+
+    template_data = {}
+
+    min_date = WeightEntry.objects.filter(user=user).aggregate(Min('date'))['date__min']
+    max_date = WeightEntry.objects.filter(user=user).\
+        aggregate(Max('date'))['date__max']
+
+    if min_date:
+        template_data['min_date'] = 'new Date(%(year)s, %(month)s, %(day)s)' %\
+                {'year': min_date.year,
+                 'month': min_date.month,
+                 'day': min_date.day}
+    if max_date:
+        template_data['max_date'] = 'new Date(%(year)s, %(month)s, %(day)s)' %\
+                {'year': max_date.year,
+                 'month': max_date.month,
+                 'day': max_date.day}
+
+    last_weight_entries = helpers.get_last_entries(user)
+
+    template_data['users'] = users
+    template_data['others'] = others
+    template_data['is_owner'] = is_owner
+    template_data['owner_user'] = user
+    template_data['show_shariff'] = is_owner
+    template_data['last_five_weight_entries_details'] = last_weight_entries
+
+    if request.user.is_authenticated():
+        return render(request, 'comparison.html', template_data)
+    return render(request, 'index.html')
 
 
 @login_required
