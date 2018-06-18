@@ -200,6 +200,16 @@
                                     <li>
                                         <a href="{% url 'core:user:preferences' %}">{% trans "My preferences" %}</a>
                                     </li>
+                                    <li {% if active_tab == 'user' %}class="active"{% endif %}>
+                                        <a href="{% url 'core:comparison' %}">
+                                            {% if not user.is_authenticated %}
+                                                {% trans "Features" %}
+                                            {% else %}
+                                                {% trans "Comparisons" %}
+                                            {% endif %}
+                                        </a>
+                                    </li>
+
                                     <li>
                                         <a href="{% url 'core:user:fitbit' %}">{% trans "Sync with Fitbit" %}</a>
                                     </li>

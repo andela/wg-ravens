@@ -117,6 +117,9 @@ urlpatterns = [
     # The dashboard
     url(r'^dashboard$', misc.dashboard, name='dashboard'),
 
+    # Comparison
+    url(r'^comparison$', misc.comparison, name='comparison'),
+
     # Others
     url(r'^about$', TemplateView.as_view(template_name="misc/about.html"),
         name='about'), url(r'^contact$', misc.ContactClassView.as_view(
