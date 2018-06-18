@@ -1,0 +1,86 @@
+{% extends "base_wide.html" %} {% load i18n staticfiles wger_extras %} {% block title %}{% trans "Weight Comparison" %}{% endblock%}
+{% block header %}
+<script src="{% static 'js/user.js' %}"></script> 
+{% endblock %} {% block content %}
+
+<div id="current-username" data-current-username="{{ owner_user.username }}" value="{{ owner_user.username }}"></div>
+
+<div class="row">
+
+    <div class="col-md-6">
+        My Graph
+        {% if not min_date %}
+        <p>
+            {% trans "There is no chart here because there are no weight entries." %}
+        </p>
+        {% endif %}
+        <div id="user_diagram"></div>
+    </div>
+
+    <div class="col-md-6">
+        <select id="user-change" onchange="userchange(this.value)">
+            <option value="none">--------</option>
+            {% if others %}
+            {% for user in others %}
+            <option value="{{user}}">{{ user }} </option>
+            {% endfor %}
+            {%else%}
+            NO user to compare with
+            {% endif%}
+        </select>
+        <p id="nope">There is no chart here because there are no weight entries.</p>
+        <div id="others_diagram"></div>
+        
+       
+
+    </div>
+</div>
+<script>
+  function userchange(username) {
+  var url;
+  var chartParams;
+  var weightChart;
+  weightChart = {};
+  chartParams = {
+    animate_on_load: true,
+    full_width: true,
+    top: 10,
+    left: 30,
+    right: 10,
+    show_secondary_x_label: true,
+    xax_count: 10,
+    target: '#others_diagram',
+    x_accessor: 'date',
+    y_accessor: 'weight',
+    min_y_from_data: true,
+    colors: ['#3465a4']
+  };
+  url = '/weight/api/get_user_weight_data/' + username;
+  d3.json(url, function (json) {
+    var data;
+    if (json.length) {
+      $('#others_diagram').show();
+      data = MG.convert.date(json, 'date');
+      weightChart.data = data;
+      // Plot the data
+      chartParams.data = data;
+      MG.data_graphic(chartParams);
+      $('#nope').hide();
+    } else {
+      $('#nope').show();
+      $('#others_diagram').hide();
+    }
+  });
+  $('.modify-time-period-controls button').click(function () {
+    var pastNumberDays = $(this).data('time_period');
+    var data = modifyTimePeriod(weightChart.data, pastNumberDays);
+    // change button state
+    $(this).addClass('active').siblings().removeClass('active');
+    if (data.length) {
+      chartParams.data = data;
+      MG.data_graphic(chartParams);
+    }
+  });
+}
+</script>
+{% endblock %}
