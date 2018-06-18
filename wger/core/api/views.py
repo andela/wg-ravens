@@ -111,6 +111,10 @@ class UserViewSet(viewsets.ModelViewSet):
         fulfilled. Returns an error HttpResponse object if unsuccessful or the
         API key bearer if all well
         '''
+        # ensure user has supplied token
+        if not token:
+            msg = 'Missing or Invalid API Key'
+            return self.make_response_message(message=msg, status=403)
         # Check if api_user has right to add users via API
         if not api_user.userprofile.api_add_user_enabled:
             msg = 'Please request wger admin for API user creation rights'
